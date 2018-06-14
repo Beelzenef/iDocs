@@ -6,7 +6,7 @@
 
 * _Place_: La representación de una localización o _bookmark_ en la aplicación, a la que acceder mediante el botón de retroceso o marcadores del navegador. 
 * _Proxy_: Clases ligeras que no dependen de la complejidad del paradigma Se instancian tan pronto como la aplicación carga, y son responsables de escuchar todos los eventos que requieran comunicación entre Vista y Presentador. Son la clave de la rapidez del MVP en aplicaciones web. No necesitas escribirlas, son creadas automáticamente por los generadores de GWT.
-* _NameToken_: Es una anotación que permite marcar una página con una determinada URL.
+* _NameToken_: Es una anotación que permite marcar una página con una determinada URL, fuertemente relacionados con los _Places_.
 
 Ref: [Creating places][places]
 
@@ -20,7 +20,13 @@ El _Presenter_ o Presentador es el término en MVP que se refiere a la parte don
 
 El _Presenter_ se "reduce" a una Clase Java, mientras que la _View_ contiene una Clase Java y un fichero `ui.xml`, que es donde se definen los _widgets_, que serán accedidos desde Java.
 
-### _Presenter slots_
+### Presenters
+
+Para una aplicación con varias páginas, necesitaremos varios _presenters_ y una estructura consistente. GWTP considera buena práctica el tener un _presenter_ raíz o padre que no será un _Place_.
+
+Este Presenter tendrá un _slot_ al cual se asociarán todos los _presenters_ hijos. La primera página de la aplicación, _home_ o cualquier otra, será revelada dentro de este _presenter_ raíz. Dentro de este _presenter_ se gestionarán varios componentes web como _headers_, menús y _footers_.
+
+#### _Presenter slots_
 
 GWTP introduce el concepto de [_Presenter slots_][presenterslots], que representan ranuras donde _Presenters_ hijos son agregados al padre, asociando esta a "familia" entre sí.
 
@@ -57,6 +63,39 @@ Este fichero XML muestra un panel HTML con un mensaje en su interior. Podemos ll
 ```java
 interface Binder extends UiBinder<Widget, SaludoView> { }
 ```
+
+### _Places_
+
+Algunos _presenters_ pueden estar asociados a un URL específico. Para que esto sea posible, necesitamos que el Presenter sea un Place, con un _NameToken_ que será unívoco para cada Presenter.
+
+En caso de usar Proxies, se usará la notación `@NameToken` para entregar ese identificador único.
+
+```java
+public class BooksPresenter extends Presenter<MyView, MyProxy> {
+    interface MyView extends View {}
+
+    @NameToken(NameTokens.BOOKS)
+    @ProxyStandard
+    interface MyProxy extends ProxyPlace {}
+
+    /* more code */
+}
+```
+
+Los _NameTokens_ se especificarán en una Clase donde se listarán todos ellos en forma de `Strings`:
+
+```java
+public class NameTokens {
+    public static final String BOOKS = "/books";
+    public static final String AUTHORS = "/authors";
+    public static final String LIBRARIES = "/libraries";
+
+}
+```
+
+### _Gatekeeper_
+
+Estos elementos son usados para prevenir de usos no autorizados de _presenters_. A menudo se usan a menudo con _logins_ y otras gestiones de permiso. Cuando se aplica un _Gatekeeper_, el _presenter no se revela hasta que el método `gatek.canReveal()` devuelve `true`.
 
 ---
 #### [Volver al inicio][back]
