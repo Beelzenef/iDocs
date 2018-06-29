@@ -2,7 +2,7 @@
 
 [_Reactive programming_ o _Rx_][reactiveprogramming] es un paradigma de programación con independencia de lenguaje que promueve el tratamiento igualitario de eventos y de datos.
 
-Todo este tratamiento se efectúa con la concepción de flujos, todo en la programación reactiva es un flujo... y de ahí surgen los datos
+Todo este tratamiento se efectúa con la concepción de flujos, todo en la programación reactiva es un flujo... y de ahí surgen los datos, ya sean datos sin más o también eventos. Para mayor claridad, un post en [Medium explica los operadores como si estos pudieran hablar][speakingoperators]. Una lectura tan entretenida como instructiva.
 
 ```java
 List<Integer> numberList = Arrays.asList(1, 2, 3, 4);
@@ -72,5 +72,6 @@ Observable.just("C#", "Java", "Python").toList()
 #### [Volver al inicio][back]
 
 [reactiveprogramming]: http://reactivex.io/
+[speakingoperators]: https://medium.freecodecamp.org/rx-if-the-operators-could-speak-58567c4618f1
 
 [back]: ../README.md

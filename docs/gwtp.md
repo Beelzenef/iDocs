@@ -97,6 +97,10 @@ public class NameTokens {
 
 Estos elementos son usados para prevenir de usos no autorizados de _presenters_. A menudo se usan a menudo con _logins_ y otras gestiones de permiso. Cuando se aplica un _Gatekeeper_, el _presenter no se revela hasta que el método `gatek.canReveal()` devuelve `true`.
 
+## PresenterWidget
+
+Se trata de _Presenters_ que funcionan de forma independiente a los _Places_, son llamados cuando es necesario, creando la oportunidad de crear _widgets_ reusables.
+
 ---
 #### [Volver al inicio][back]
 
