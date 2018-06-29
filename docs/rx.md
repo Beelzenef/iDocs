@@ -2,7 +2,7 @@
 
 [_Reactive programming_ o _Rx_][reactiveprogramming] es un paradigma de programación con independencia de lenguaje que promueve el tratamiento igualitario de eventos y de datos.
 
-Todo este tratamiento se efectúa con la concepción de flujos, todo en la programación reactiva es un flujo... y de ahí surgen los datos
+Todo este tratamiento se efectúa con la concepción de flujos, todo en la programación reactiva es un flujo... y de ahí surgen los datos, ya sean datos sin más o también eventos. Para mayor claridad, un post en [Medium explica los operadores como si estos pudieran hablar][speakingoperators]. Una lectura tan entretenida como instructiva.
 
 ```java
 List<Integer> numberList = Arrays.asList(1, 2, 3, 4);
@@ -19,12 +19,16 @@ Observable langs = Observable.just("C#", "Java", "Python");
 
 ### _map()_
 
+Recorre todos los elementos del flujo y los transforma según la función llamada en el operador.
+
 ```java
 Observable.just("C#", "Java", "Python").map(String::length)
     .subscribe(System.out::println);
 ```
 
 ### _filter()_
+
+Filtra y envía los elementos del flujo que cumplen con ese filtro.
 
 ```java
 Observable.just("C#", "Java", "Python").filter(e -> e.length)
@@ -33,12 +37,16 @@ Observable.just("C#", "Java", "Python").filter(e -> e.length)
 
 ### _distinct()_
 
+Se detectan los elementos emitidos que resultan diferentes. Si se les aplica un `map()` como en el ejemplo, emite solo aquellas longitudes de cadena de texto que sean diferentes del resto, que no se repitan.
+
 ```java
 Observable.just("C#", "Java", "Python").map(String::length).distinct()
     .subscribe(System.out::println);
 ```
 
 ### _take()_
+
+Recibe un número entero para recoger el item que se encuentra en ese índice.
 
 ```java
 Observable.just("C#", "Java", "Python").take(2)
@@ -56,6 +64,8 @@ Observable.just("C#", "Java", "Python").takeUntil(l -> l.length < 5)
 
 ### _count()_
 
+Cuenta los elementos que el flujo emite hasta su llamada.
+
 ```java
 Observable.just("C#", "Java", "Python").count()
     .subscribe(System.out::println);
@@ -63,14 +73,37 @@ Observable.just("C#", "Java", "Python").count()
 
 ### _toList()_
 
+Convierte el flujo en una lista, que podemos guardar y operar con ella.
+
 ```java
 Observable.just("C#", "Java", "Python").toList()
     .subscribe(System.out::println);
+```
+
+### _combineLatest()_
+
+Combina los flujos que se le especifican, en una lista de Observables, en un combinador que puedes recoger para operar con él. Puede ser una nueva instancia, elementos individuales...
+
+```java
+Observable.combineLatest(Obs1, Obs2, ..., combiner, accion -> { combiner.operaciones(); }
+    .doOnNext(() -> resultadoDeOperaciones())
+        .subscribe();
+```
+
+### _merge()_
+
+Mezcla dos o más Observables, dos flujos, hasta convertirlos en uno solo para poder realizar operaciones con el mismo.
+
+```java
+Observable.merge(Obs1, Obs2, ...)
+    .doOnNext(() -> operacionesCombinadas())
+        .subscribe();
 ```
 
 ---
 #### [Volver al inicio][back]
 
 [reactiveprogramming]: http://reactivex.io/
+[speakingoperators]: https://medium.freecodecamp.org/rx-if-the-operators-could-speak-58567c4618f1
 
 [back]: ../README.md
