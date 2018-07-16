@@ -96,6 +96,16 @@ Mezcla dos o más Observables, dos flujos, hasta convertirlos en uno solo para p
 
 ```java
 Observable.merge(Obs1, Obs2, ...)
+    .doOnNext(() -> operaciones())
+        .subscribe();
+```
+
+### _zip()_
+
+Combina Observables del mismo modo que hace una cremallera al ser usada. Coge por parejas o tríos... correspondientes en un objeto combinado
+
+```java
+Observable.merge(Obs1, Obs2, ..., (o1, o2))
     .doOnNext(() -> operacionesCombinadas())
         .subscribe();
 ```
