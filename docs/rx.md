@@ -15,6 +15,23 @@ Para los ejemplos que siguen, usaremos el siguiente Observable:
 Observable langs = Observable.just("C#", "Java", "Python");
 ```
 
+Rx crea una nueva forma de convertir a los Productores en elementos activos y a los Consumidores en elementos pasivos. Los Observables producen emisiones y los consumidores reaccionan ante estas nuevas emisiones.
+
+¿Cuál es la diferencia entre un Observable y una función? Mientras las valores de las funciones dependen de las veces que son invocadas, los Observables pueden devolver, emitir, tantos valores como sean necesarios. Pueden emitir desde 0 a (potencialmente) infinitos valores.
+
+Los Observables son síncronos, pero pueden actuar de forma asíncrona.
+
+Las funciones pueden devolver un solo valor de forma síncrona.
+Los Observables pueden devolver una cantidad indeterminada de valores de forma síncrona o asíncrona.
+
+Un Observador, en cambio, es un consumidor que recoge los valores emitidos por un Observable. Son objetos con tres _callbacks_, uno por cada tipo de notificación que un Observable puede entregar:
+
+* `onNext()`, para el siguiente valor emitido
+* `onError()`, cuando hay un error en el Observable
+* `onComplete()`, cuando la emisión finaliza, el Observable ha completado su operación.
+
+No necesitas proveer de todos los _callbacks_, el Observable continuará con su ciclo de vida de forma natural sin que puedas reaccionar a aquellos que omitas.
+
 ## Operadores
 
 ### _map()_
