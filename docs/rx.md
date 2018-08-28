@@ -55,7 +55,7 @@ Observable.just("C#", "Java", "Python").take(2)
 
 ### _takeWhile()_
 
-Algunos nombres de operadores varían en su aplicación en el lenguaje, pero el funcionamiento sigue siendo el mismo. En el caso de _takeWhile()_:
+Algunos nombres de operadores varían en su aplicación en el lenguaje, pero el funcionamiento sigue siendo el mismo. En el caso de `takeWhile()`:
 
 ```java
 Observable.just("C#", "Java", "Python").takeUntil(l -> l.length < 5)
@@ -109,6 +109,80 @@ Observable.merge(Obs1, Obs2, ..., (o1, o2))
     .doOnNext(() -> operacionesCombinadas())
         .subscribe();
 ```
+
+## Tipos de Observables
+
+### _Subject_
+
+Es un tipo especial de Observable que permite multicasting de varios Observables, semejante a los múltiples _listeners_ que puede tener un _widget_ en cualquier librería o lenguaje. Mantiene un registro de varios _listeners_ para emitir los diferentes eventos que sucedan.
+
+Cada `Subject` es un Observable, con todos los métodos a su disposición como en cualquier otro. Para proveer a un Subject de un nuevo valor, invocarás a `next(newValue)`.
+
+Puedes utilizar un `Subject` como argumento para `subscribe()`de cualquier Observable, siendo un Observable esta misma Clase.
+
+[Sigue el enlace para leer más.](http://reactivex.io/rxjs/manual/overview.html#subject)
+
+### _BehaviourSubject_
+
+Una especialización de `Subject` que sirve para representar valores en el tiempo. Descrito en la página de RxJs, si `Subject` es el flujo de eventos para cumplir años, `BehaviourSubject` es el flujo de eventos que refleja la edad de una persona. 
+
+Puede ser de un tipo concreto. En RxJs, el constructor de la Clase le ofrece el valor inicial.
+
+```javascript
+var subject = new Rx.BehaviorSubject(0); 
+```
+
+Este Observable recuerda el último valor emitido, enviandolo a cualquier Observable que se suscriba, aunque este valor ya se haya emitido en el pasado.
+
+[Sigue el enlace para leer más.](http://reactivex.io/rxjs/manual/overview.html#behaviorsubject)
+
+### _ReplaySubject_
+
+Otra especialización de `Subject`, similar a `BehaviourSubject` porque puede emitir valores "antiguos" a nuevos suscriptores, pero también puede "grabar" una parte de la ejecución del Observable.
+
+```javascript
+var subject = new Rx.ReplaySubject(3);
+```
+
+En el siguiente código, creamos un _ReplaySubject_ que recordará los tres últimos valores, que irá reproduciendo a medida que lleguen (invocaciones a `next()`).
+
+```javascript
+var subject = new Rx.ReplaySubject(3);
+
+
+subject.subscribe({
+  next: (v) => console.log('observerA: ' + v)
+});
+
+subject.next(1);
+subject.next(2);
+subject.next(3);
+subject.next(4);
+
+subject.subscribe({
+  next: (v) => console.log('observerB: ' + v)
+});
+
+subject.next(5);
+```
+
+Y el resultado a esperar:
+
+```
+observerA: 1
+observerA: 2
+observerA: 3
+observerA: 4
+observerB: 2
+observerB: 3
+observerB: 4
+observerA: 5
+observerB: 5
+```
+
+Lo que ocurre: se muestran en Observable A los valores conforme son emitidos. En algún momento, se suscribe el Observable B, y se reproducen los tres valores que hemos indicado que debe recordar hacia atrás, en el orden en el que se emitieron. Una vez emitidos, se emiten los valores nuevos que llegan... sin más valores que emitir.
+
+[Sigue el enlace para leer más.](http://reactivex.io/rxjs/manual/overview.html#replaysubject)
 
 ---
 #### [Volver al inicio][back]
